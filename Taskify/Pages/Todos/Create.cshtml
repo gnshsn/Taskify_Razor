@@ -1,0 +1,64 @@
+﻿@page
+@model Taskify.Pages.Todos.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>TodoItems</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="TodoItems.Title" class="control-label"></label>
+                <input asp-for="TodoItems.Title" class="form-control" />
+                <span asp-validation-for="TodoItems.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TodoItems.Description" class="control-label"></label>
+                <input asp-for="TodoItems.Description" class="form-control" />
+                <span asp-validation-for="TodoItems.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TodoItems.DueDate" class="control-label"></label>
+                <input asp-for="TodoItems.DueDate" class="form-control" />
+                <span asp-validation-for="TodoItems.DueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TodoItems.Priority" class="control-label"></label>
+                <select asp-for="TodoItems.Priority" class="form-control"></select>
+                <span asp-validation-for="TodoItems.Priority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TodoItems.Status" class="control-label"></label>
+                <select asp-for="TodoItems.Status" class="form-control"></select>
+                <span asp-validation-for="TodoItems.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TodoItems.CategoryId" class="control-label"></label>
+                <select asp-for="TodoItems.CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="TodoItems.OwnerId" class="control-label"></label>
+                <input asp-for="TodoItems.OwnerId" class="form-control" />
+                <span asp-validation-for="TodoItems.OwnerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

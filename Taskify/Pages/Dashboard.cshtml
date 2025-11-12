@@ -1,0 +1,93 @@
+﻿@page
+@model Taskify.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="mb-4">📊 Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body text-center">
+                <h5>Total Todos</h5>
+                <h2 class="text-primary">@Model.TotalTodos</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body text-center">
+                <h5>Completed</h5>
+                <h2 class="text-success">@Model.CompletedTodos</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body text-center">
+                <h5>Pending</h5>
+                <h2 class="text-danger">@Model.PendingTodos</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress bar -->
+<div class="my-4">
+    <h5>Progress</h5>
+    @{
+        var percent = Model.TotalTodos > 0
+        ? (Model.CompletedTodos * 100 / Model.TotalTodos)
+        : 0;
+    }
+    <div class="progress" style="height: 25px;">
+        <div class="progress-bar bg-success" style="width:@percent%">
+            @percent%
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js: Category breakdown -->
+<div class="my-5">
+    <h5>Tasks by Category</h5>
+    <canvas id="categoryChart" width="400" height="200"></canvas>
+</div>
+
+<!-- Upcoming Todos -->
+@if (Model.UpcomingTodos.Any())
+{
+    <h5>Upcoming Tasks</h5>
+    <ul class="list-group">
+        @foreach (var todo in Model.UpcomingTodos)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@todo.Title</span>
+                <span class="badge bg-info">@todo.DueDate?.ToShortDateString()</span>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-muted">No upcoming tasks 🎉</p>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategorySummaries.Select(c => c.CategoryName))),
+                datasets: [{
+                    label: 'Tasks',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategorySummaries.Select(c => c.Count))),
+                    backgroundColor: '#007bff'
+                }]
+            },
+            options: { responsive: true }
+        });
+    </script>
+}
